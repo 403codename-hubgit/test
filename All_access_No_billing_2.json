@@ -1,0 +1,145 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowAllActionsExceptRestricted",
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        },
+        {
+            "Sid": "DenyBillingAccess",
+            "Effect": "Deny",
+            "Action": [
+                "aws-portal:*",
+                "billing:*",
+                "ce:*",
+                "cur:*",
+                "budgets:*",
+                "account:*",
+                "payments:*",
+                "tax:*",
+                "consolidatedbilling:*",
+                "invoicing:*",
+                "freetier:*",
+                "purchase-orders:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "DenyPolicyChanges",
+            "Effect": "Deny",
+            "Action": [
+                "iam:DeletePolicy",
+                "iam:DeletePolicyVersion",
+                "iam:DetachUserPolicy",
+                "iam:DetachRolePolicy",
+                "iam:DetachGroupPolicy",
+                "iam:DeleteUserPolicy",
+                "iam:DeleteRolePolicy",
+                "iam:DeleteGroupPolicy"
+            ],
+            "Resource": "arn:aws:iam::720267788258:policy/All_access_No_billing"
+        },
+        {
+            "Sid": "ProtectadminUser",
+            "Effect": "Deny",
+            "Action": [
+                "iam:DeleteUser",
+                "iam:UpdateUser",
+                "iam:CreateLoginProfile",
+                "iam:UpdateLoginProfile",
+                "iam:DeleteLoginProfile",
+                "iam:CreateAccessKey",
+                "iam:UpdateAccessKey",
+                "iam:DeleteAccessKey",
+                "iam:AttachUserPolicy",
+                "iam:DetachUserPolicy",
+                "iam:PutUserPolicy",
+                "iam:DeleteUserPolicy",
+                "iam:AddUserToGroup",
+                "iam:RemoveUserFromGroup",
+                "iam:TagUser",
+                "iam:UntagUser",
+                "iam:PutUserPermissionsBoundary",
+                "iam:DeleteUserPermissionsBoundary"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:user/admin",
+                "arn:aws:iam::*:user/admin/*"
+            ]
+        },
+        {
+            "Sid": "AllowGroupCreationAndAttachOnlyThisPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateGroup",
+                "iam:DeleteGroup",
+                "iam:UpdateGroup",
+                "iam:PutGroupPolicy",
+                "iam:DeleteGroupPolicy",
+                "iam:GetGroup",
+                "iam:GetGroupPolicy",
+                "iam:ListGroupPolicies",
+                "iam:ListAttachedGroupPolicies",
+                "iam:ListGroupsForUser"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowAttachOnlyThisPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachGroupPolicy",
+                "iam:DetachGroupPolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:group/*"
+            ]
+        },
+        {
+            "Sid": "AllowThisPolicyArn",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachGroupPolicy",
+                "iam:DetachGroupPolicy"
+            ],
+            "Resource": "arn:aws:iam::720267788258:policy/All_access_No_billing"
+        },
+        {
+            "Sid": "DenyAttachOtherPolicies",
+            "Effect": "Deny",
+            "Action": [
+                "iam:AttachGroupPolicy"
+            ],
+            "Resource": "arn:aws:iam::*:group/*",
+            "Condition": {
+                "ArnNotEquals": {
+                    "iam:PolicyArn": "arn:aws:iam::720267788258:policy/All_access_No_billing"
+                }
+            }
+        },
+        {
+            "Sid": "DenyAdministratorGroupAccess",
+            "Effect": "Deny",
+            "Action": [
+                "iam:CreateGroup",
+                "iam:DeleteGroup",
+                "iam:UpdateGroup",
+                "iam:PutGroupPolicy",
+                "iam:DeleteGroupPolicy",
+                "iam:AttachGroupPolicy",
+                "iam:DetachGroupPolicy",
+                "iam:AddUserToGroup",
+                "iam:RemoveUserFromGroup",
+                "iam:GetGroup",
+                "iam:GetGroupPolicy",
+                "iam:ListGroupPolicies"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:group/administrator",
+                "arn:aws:iam::*:group/administrator/*"
+            ]
+        }
+    ]
+}
